@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on 香鱼Ayubass的小站</title>
+    <link>https://imxiangyu.github.io/posts/</link>
+    <description>Recent content in Posts on 香鱼Ayubass的小站</description>
+    <image>
+      <url>https://imxiangyu.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://imxiangyu.github.io/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Thu, 15 Dec 2022 00:15:39 +0800</lastBuildDate><atom:link href="https://imxiangyu.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>灵茗屿</title>
+      <link>https://imxiangyu.github.io/posts/lmy/</link>
+      <pubDate>Thu, 15 Dec 2022 00:15:39 +0800</pubDate>
+      
+      <guid>https://imxiangyu.github.io/posts/lmy/</guid>
+      <description>Mods of LingMingYu 末影接口 末影接口:管道 应用能源2 AE2-stuff 懒人AE2 更多存储元件 更多CPU 匠魂 匠魂盔甲 匠魂工具升级 匠魂进化 匠魂扩充 匠魂补充 匠魂合金附加 工匠再锻 匠魂jei 植物魔法 额外植物学 无尽贪婪 致密中子态收集器 无尽贪婪:接口 工业 高级太阳能 超级太阳能 通用机械 通用机械发电机 沉浸工程 环境科技 龙之研究 龙之研究扩展 模块化机械 热力膨胀 热力膨胀扩展 刷怪塔实用设备 深度怪物学习 潘马斯农场 建筑手杖 通量网络 无中生有 xnet 2022.12.15 今日进度 插件 Mod 均已确认完毕, 客户端已完成制作, 经测试稳定无问题 Mods列表已公布 魔改事宜正在确定 更多消息请持续关注</description>
+    </item>
+    
+    <item>
+      <title>我的第一篇博客</title>
+      <link>https://imxiangyu.github.io/posts/my-first-post/</link>
+      <pubDate>Sun, 27 Nov 2022 00:37:37 +0800</pubDate>
+      
+      <guid>https://imxiangyu.github.io/posts/my-first-post/</guid>
+      <description>这是我的第一篇博客 记录一下我用GitHub对博客进行更新的一个流程吧
+首先要对自己的GitHub仓库进行clone
+git clone 之后就会生成一个与项目文件相同的文件夹
+进入文件夹后,对文件夹内容进行操作
+git add .
+可以添加文件
+git commit -m &amp;quot;描述&amp;quot;
+可以将自己添加的文件commit
+git push origin main
+即可大功告成
+同时,上传自己的代码需要用到GitHub令牌
+具体的申请步骤参照该链接
+Github令牌</description>
+    </item>
+    
+  </channel>
+</rss>
