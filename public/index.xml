@@ -6,8 +6,15 @@
     <description>Recent content on Ayu&#39;s Blog</description>
     <generator>Hugo -- 0.123.7</generator>
     <language>ayu</language>
-    <lastBuildDate>Fri, 19 Jul 2024 14:19:51 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jul 2024 14:43:31 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>常用命令</title>
+      <link>http://localhost:1313/posts/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Fri, 19 Jul 2024 14:43:31 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</guid>
+      <description>Git常用命令 1 2 3 4 5 git add . git commit -m &amp;#34;xxx&amp;#34; git push origin jask-dev:Ayu git pull origin Ayu:jask-dev 1 2 git checkout -b branch_name // 切换分支 如果不存在就创建 -b 不存在就创建 1 2 git status git rebase 1 2 git log git restore 1 2 git reset --hard</description>
+    </item>
     <item>
       <title>如何写一篇blog</title>
       <link>http://localhost:1313/posts/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E7%AF%87blog/</link>
