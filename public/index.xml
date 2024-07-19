@@ -6,8 +6,15 @@
     <description>Recent content on Ayu&#39;s Blog</description>
     <generator>Hugo -- 0.123.7</generator>
     <language>ayu</language>
-    <lastBuildDate>Fri, 19 Jul 2024 12:12:30 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jul 2024 14:19:51 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何写一篇blog</title>
+      <link>http://localhost:1313/posts/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E7%AF%87blog/</link>
+      <pubDate>Fri, 19 Jul 2024 14:19:51 +0800</pubDate>
+      <guid>http://localhost:1313/posts/%E5%A6%82%E4%BD%95%E5%86%99%E4%B8%80%E7%AF%87blog/</guid>
+      <description>首先在博客目录下，输入hugo new posts/&amp;lt;name&amp;gt;.md 之后便会自动在content/posts目录下创建一个md文件 Content &amp;quot;/home/ayu/Ayu&#39;s Blog/content/posts/如</description>
+    </item>
     <item>
       <title>My First Blog</title>
       <link>http://localhost:1313/posts/my-first-blog/</link>
