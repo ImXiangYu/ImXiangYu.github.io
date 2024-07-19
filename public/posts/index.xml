@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Ayu&#39;s Blog</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Ayu&#39;s Blog</description>
+    <generator>Hugo -- 0.123.7</generator>
+    <language>ayu</language>
+    <lastBuildDate>Fri, 19 Jul 2024 12:12:30 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>My First Blog</title>
+      <link>http://localhost:1313/posts/my-first-blog/</link>
+      <pubDate>Fri, 19 Jul 2024 12:12:30 +0800</pubDate>
+      <guid>http://localhost:1313/posts/my-first-blog/</guid>
+      <description>Hello, welcome to my world.
+This is my first blog.</description>
+    </item>
+  </channel>
+</rss>
