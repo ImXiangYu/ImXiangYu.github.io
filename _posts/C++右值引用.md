@@ -1,0 +1,284 @@
++++
+title = 'C++右值引用'
+date = 2024-08-18T23:16:22+08:00
+draft = false
++++
+
+# C++11右值引用
+
+本文参考视频：[C++11实用特性](https://www.bilibili.com/video/BV1bX4y1G7ks/?p=4&share_source=copy_web&vd_source=822e2b085983c89592154feee56920ef) 本文参考博客：[C++ 教程 | 爱编程的大丙 (subingwen.cn)](https://subingwen.cn/cplusplus/)
+
+## 1. 什么是左值右值？
+
+`lvalue`是`locator value`的缩写，`rvalue`是`read value`的缩写
+左值是指存储在内存中，有明确存储地址，**可取地址**的数据
+右值是指可以提供数据值的数据，**不可取地址** 因此可以看出有个便捷的判断方法，即**可以对表达式取地址(&)就是左值，否则为右值** 所有有名字的变量或对象都是左值，而右值是匿名的，例如以下例子：
+
+```c++
+int a = 520;
+int b = 1314;
+a = b;
+```
+
+例子中的a, b为左值，520, 1314为右值，在a = b中，a, b都是左值
+因此**不能**简单地认为等号左边的就是左值，等号右边的就是右值
+
+## 2. 右值的类型
+
+C++11中右值可以分为两种：将亡值(xvalue, expiring value)和纯右值(prvalue, pure rvalue)
+
+纯右值：非引用返回的临时变量、运算表达式产生的临时变量、原始字面量和 lambda 表达式等
+将亡值：与右值引用相关的表达式，比如，T&&类型函数的返回值、 std::move 的返回值等。
+
+```c++
+int value = 520;
+```
+
+在这个语句中，value是左值，520是字面量也就是右值。其中value可以被引用，但是520不可以，因为字面量都是右值。
+
+## 3. 右值引用
+
+右值引用就是对一个右值进行引用的类型，因为右值是匿名的，所以我们只能使用引用的方式找到它。无论声明左值引用还是右值引用都必须立即进行初始化，因为引用类型本身并不拥有所绑定对象的内存，只是该对象的一个别名。通过右值引用的声明，该右值又“重获新生”，其生命周期与右值引用类型变量的生命周期一样，只要该变量还活着，该右值临时量将会一直存活下去。
+
+右值引用(R-value reference)，标记为`&&`，用例如下：
+
+```C++
+#include <iostream>
+using namespace std;
+
+int&& value = 520; // 520是纯右值，value是对字面量520这个右值的引用
+class Test
+{
+public:
+    Test()
+    {
+        cout << "construct: my name is jerry" << endl;
+    }
+    Test(const Test& a)
+    {
+        cout << "copy construct: my name is tom" << endl;
+    }
+};
+
+Test getObj()
+{
+    return Test();
+}
+
+int main()
+{
+    int a1;
+    int &&a2 = a1;        // error，a1是一个左值，使用左值初始化右值引用类型是不合法的
+    Test& t = getObj();   // error，右值不能给普通的左值t引用赋值
+    Test && t = getObj(); // 正确，getObj()返回的临时对象被称为将亡值，t是这个将亡值的右值引用
+    const Test& t = getObj();
+    // 正确，常量左值引用是一个万能的引用类型，它可以接受左值、右值、常量左值和常量右值
+    return 0;
+}
+```
+
+## 4. 性能优化
+
+在C++中进行对象赋值操作的时候，很多情况下会发生对象之间的深拷贝，如果堆内存很大，这个拷贝的代价也就非常大，在某些情况下，如果想要避免对象的深拷贝，就可以使用右值引用进行性能的优化。
+
+```c++
+#include <iostream>
+using namespace std;
+
+class Test
+{
+public:
+    Test() : m_num(new int(100))
+    {
+        cout << "construct: my name is jerry" << endl;
+    }
+
+    Test(const Test& a) : m_num(new int(*a.m_num))
+    {
+        cout << "copy construct: my name is tom" << endl;
+    }
+
+    ~Test()
+    {
+        delete m_num;
+    }
+
+    int* m_num;
+};
+
+Test getObj()
+{
+    Test t;
+    return t;
+}
+
+int main()
+{
+    Test t = getObj();
+    cout << "t.m_num: " << *t.m_num << endl;
+    return 0;
+};
+```
+
+调用`Test t = getObj();`的时候调用拷贝构造函数对返回的临时对象进行了深拷贝得到了对象`t`，在`getObj()`函数中创建的对象虽然进行了内存的申请操作，但是没有使用就释放掉了。如果能够使用临时对象已经申请的资源，既能节省资源，还能节省资源申请和释放的时间。
+如果要执行这样的操作就需要使用右值引用了，右值引用具有移动语义，移动语义可以将资源（堆、系统对象等）通过浅拷贝从一个对象转移到另一个对象，这样就能减少不必要的临时对象的创建、拷贝以及销毁，可以大幅提高C++应用程序的性能。用例如下：
+
+```C++
+#include <iostream>
+using namespace std;
+
+class Test
+{
+public:
+    Test() : m_num(new int(100))
+    {
+        cout << "construct: my name is jerry" << endl;
+    }
+
+    Test(const Test& a) : m_num(new int(*a.m_num))
+    {
+        cout << "copy construct: my name is tom" << endl;
+    }
+
+    // 添加移动构造函数
+    Test(Test&& a) : m_num(a.m_num)
+    {
+        a.m_num = nullptr;
+        cout << "move construct: my name is sunny" << endl;
+    }
+
+    ~Test()
+    {
+        delete m_num;
+        cout << "destruct Test class ..." << endl;
+    }
+
+    int* m_num;
+};
+
+Test getObj()
+{
+    Test t;
+    return t;
+}
+
+int main()
+{
+    Test t = getObj();
+    cout << "t.m_num: " << *t.m_num << endl;
+    return 0;
+};
+```
+
+通过修改，在上面的代码给Test类添加了移动构造函数（参数为右值引用类型），这样在进行`Test t = getObj();`操作的时候并没有调用拷贝构造函数进行深拷贝，而是调用了移动构造函数，在这个函数中只是进行了浅拷贝，没有对临时对象进行深拷贝，提高了性能。
+
+在测试程序中`getObj()`的返回值就是一个将亡值，也就是说是一个右值，在进行赋值操作的时候如果`=`右边是一个右值，那么移动构造函数就会被调用。移动构造中使用了右值引用，会将临时对象中的堆内存地址的所有权转移给对象`t`，这块内存被成功续命，因此在`t`对象中还可以继续使用这块内存。
+
+**对于需要动态申请大量资源的类，应该设计移动构造函数，以提高程序效率。需要注意的是，我们一般在提供移动构造函数的同时，也会提供常量左值引用的拷贝构造函数，以保证移动不成还可以使用拷贝构造函数。**
+
+## 5. &&的特性
+
+在C++中，并不是所有情况下`&&`都代表是一个右值引用，具体的场景体现在模板和自动类型推导中，如果是模板参数需要指定为`T&&`，如果是自动类型推导需要指定为`auto &&`，在这两种场景下`&&`被称作未定的引用类型。另外还有一点需要额外注意`const T&&`表示一个**右值引用**，不是未定引用类型。
+
+例子1：
+
+```c++
+template<typename T>
+void f(T&& param);
+void f1(const T&& param);
+f(10);     // 10是右值，因此T&&表示右值引用
+int x = 10;
+f(x);   // x是左值，因此T&&表示左值引用
+f1(x);    // error, x是左值
+f1(10); // ok, 10是右值
+```
+
+例子2：
+
+```c++
+int main()
+{
+    int x = 520, y = 1314;
+    auto&& v1 = x;             // auto&& 表示一个整形的左值引用
+    auto&& v2 = 250;         // auto&& 表示一个整形的右值引用
+    decltype(x)&& v3 = y;   
+                            // error，decltype(x)&& 等价于 int&&，是一个右值引用而不是未定引用类型
+                            // y是一个左值，不能用左值初始化一个右值引用类型
+    cout << "v1: " << v1 << ", v2: " << v2 << endl;
+    return 0;
+};
+```
+
+由于上述代码中存在`T&&`和`auto&&`这种未定引用类型，因此当它作为参数时，可能被右值引用初始化，也有可能被左值引用初始化，在进行类型推导时，右值引用类型`&&`会发生变化，这种变化成为**引用折叠** 在C++11中使用引用折叠的规则如下：
+
+1. 使用右值推导`T&&`或者`auto&&`得到的是一个右值引用类型
+2. 通过非右值（右值引用、常量右值引用、左值、左值引用、常量左值引用）推导`T&&`或者`auto&&`得到的是一个左值引用类型
+
+例子1：
+
+```c++
+int&& a1 = 5;
+auto&& bb = a1;         // a1是右值引用，因此bb是左值引用类型
+auto&& bb1 = 5;            // 5是右值，因此bb1是右值引用类型
+
+int a2 = 5;
+int &a3 = a2;            // a2是左值，a3是左值引用
+auto&& cc = a3;            // a3是左值引用，因此cc是左值引用类型
+auto&& cc1 = a2;        // a2是左值，因此cc1是左值引用类型
+
+const int& s1 = 100;    // s1是常量左值引用
+const int&& s2 = 100;    // s2是常量右值引用
+auto&& dd = s1;            // s1是常量左值引用，因此dd是常量左值引用类型
+auto&& ee = s2;            // s2是常量右值引用，因此ee是常量左值引用类型
+
+const auto&& x = 5;        // x是右值引用，不需要推导，只能通过右值初始化
+```
+
+例子2：
+
+```c++
+#include <iostream>
+using namespace std;
+
+void printValue(int &i)
+{
+    cout << "l-value: " << i << endl;
+}
+
+void printValue(int &&i)
+{
+    cout << "r-value: " << i << endl;
+}
+
+void forward(int &&k)
+{
+    printValue(k);
+}
+
+int main()
+{
+    int i = 520;
+    printValue(i);
+    printValue(1314);
+    forward(250);
+
+    return 0;
+};
+```
+
+输出结果如下：
+
+```c++
+l-value: 520
+r-value: 1314
+l-value: 250
+```
+
+根据测试代码可以得知，编译器会根据传入的参数的类型（左值还是右值）调用对应的重置函数（printValue），函数forward()接收的是一个右值，但是在这个函数中调用函数printValue()时，参数k变成了一个命名对象，编译器会将其当做左值来处理。
+
+## 6. 总结
+
+1. 左值和右值是独立于他们的类型的，右值引用类型可能是左值也可能是右值
+2. 编译器会将已命名的右值引用视为左值，将未命名的右值引用视为右值。
+3. `auto&&`或`T&&`是一个未定的引用类型，它可能是左值引用类型，也可能是右值引用类型，这取决于初始化的值类型。
+4. 通过右值推导`auto&&`或`T&&`得到的是一个右值引用类型，其余都是左值引用类型。
